@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  name             String?
+  passwordHash     String?
+  emailVerified    DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  isPro            Boolean         @default(false)
+  polarSubId       String?
+  polarSubStatus   String?
+  storageUsedBytes Int             @default(0)
+  totalConversions Int             @default(0)
+  sessions         Session[]
+  jobs             ConversionJob[]
+  shareLinks       ShareLink[]
+  reviews          Review[]
+  licenseKeys      LicenseKey[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AnonSession {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  lastSeenAt       DateTime @default(now())
+  previewsUsed     Int      @default(0)
+  downloadsUsed    Int      @default(0)
+  conversionsToday Int      @default(0)
+  dayBucket        String   @default("")
+  ipHash           String   @default("")
+  hasReviewed      Boolean  @default(false)
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  stars       Int                        // 1–5
+  body        String
+  displayName String
+  location    String   @default("")      // e.g. "Austin, TX"
+  fileFormat  String   @default("")      // e.g. "WordPerfect .wpd"
+  isSeeded    Boolean  @default(false)   // true = baseline seed review
+  ipHash      String   @default("")      // hashed IP, for dedup
+  anonSessionId String @default("")
+  userId      String?
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model ConversionJob {
+  id                 String    @id @default(cuid())
+  userId             String?
+  anonSessionId      String?
+  originalName       String
+  originalSize       Int
+  originalFormat     String
+  originalExtension  String
+  originalHash       String
+  targetFormat       String
+  status             String    @default("queued")
+  progress           Int       @default(0)
+  currentStage       String    @default("Queued")
+  currentStageDetail String?
+  errorMessage       String?
+  errorCode          String?
+  inputPath          String
+  outputPath         String?
+  previewText        String?
+  previewHtml        String?
+  fileHealthScore    Int?
+  corruptionType     String?
+  repairability      String?
+  encodingDetected   String?
+  languageDetected   String?
+  documentType       String?
+  metadataJson       String?
+  processingMs       Int?
+  aiEnhanced         Boolean   @default(false)
+  formattingScore    Int?
+  downloadCount      Int       @default(0)
+  createdAt          DateTime  @default(now())
+  completedAt        DateTime?
+  expiresAt          DateTime
+  user               User?     @relation(fields: [userId], references: [id])
+  shareLinks         ShareLink[]
+}
+
+model ShareLink {
+  id        String        @id @default(cuid())
+  jobId     String
+  userId    String?
+  slug      String        @unique
+  expiresAt DateTime
+  viewCount Int           @default(0)
+  createdAt DateTime      @default(now())
+  job       ConversionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User?         @relation(fields: [userId], references: [id])
+}
+
+model LicenseKey {
+  id           String    @id @default(cuid())
+  key          String    @unique
+  userId       String?
+  email        String    @default("")
+  polarOrderId String    @default("")
+  activatedAt  DateTime?
+  expiresAt    DateTime?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  user         User?     @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  nexus-revive:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexus-revive-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - nexus_storage:/app/storage
+      - nexus_db:/app/prisma
+    environment:
+      DATABASE_URL: "file:/app/prisma/prod.db"
+      NEXTAUTH_SECRET: "change-this-to-random-64-char-string-in-production"
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXT_PUBLIC_POLAR_CHECKOUT_URL: "https://buy.polar.sh/polar_cl_r6JtJ7fUkqiBrc0sem02LQIJWYhO5fUx5TEZH2TglPa"
+      POLAR_ORG_ID: "49987b95-c011-4be3-ae4f-838e943c9e90"
+      POLAR_WEBHOOK_SECRET: "change-this-in-production"
+      STORAGE_PATH: "/app/storage"
+      MAX_FREE_FILE_BYTES: "26214400"
+      MAX_PRO_FILE_BYTES: "524288000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nexus-network
+
+volumes:
+  nexus_storage:
+  nexus_db:
+
+networks:
+  nexus-network:
+    driver: bridge

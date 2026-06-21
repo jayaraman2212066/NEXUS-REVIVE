@@ -1,0 +1,7 @@
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="40" rx="4" fill="#040B14"/>
+  <path d="M8 20L16 12L24 20L16 28L8 20Z" fill="#00D4FF"/>
+  <path d="M16 12L24 20L32 12" stroke="#00FF88" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="20" r="2" fill="#E0EFFF"/>
+  <text x="38" y="25" font-family="Space Grotesk, sans-serif" font-size="14" font-weight="700" fill="#00D4FF">NEXUS REVIVE</text>
+</svg>
