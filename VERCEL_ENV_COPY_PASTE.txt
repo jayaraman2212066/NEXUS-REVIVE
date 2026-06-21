@@ -11,10 +11,11 @@
 
 # Step 3: Copy everything below this line and paste into Vercel
 
+
 DATABASE_URL=file:/tmp/prisma.db
-NEXTAUTH_SECRET=REPLACE_THIS_64_CHAR_HEX_STRING
-NEXTAUTH_URL=YOUR_VERCEL_URL
-NEXT_PUBLIC_APP_URL=YOUR_VERCEL_URL
+NEXTAUTH_SECRET=dc85f5cbf833ec610e67360aa64921de0e88e91c88e4fd6f87950ec4aa80d702
+NEXTAUTH_URL=https://nexus-revive.vercel.app
+NEXT_PUBLIC_APP_URL=https://nexus-revive.vercel.app
 NEXT_PUBLIC_APP_NAME=Nexus Revive
 NEXT_PUBLIC_APP_VERSION=1.0.0
 NODE_ENV=production
@@ -32,4 +33,4 @@ MAX_FREE_JOBS_PER_DAY=10
 MAX_BATCH_FILES_PRO=50
 NEXT_PUBLIC_POLAR_CHECKOUT_URL=https://buy.polar.sh/polar_cl_r6JtJ7fUkqiBrc0sem02LQIJWYhO5fUx5TEZH2TglPa
 POLAR_ORG_ID=49987b95-c011-4be3-ae4f-838e943c9e90
-POLAR_WEBHOOK_SECRET=your_webhook_secret_if_you_have_polar
+POLAR_WEBHOOK_SECRET=polar_whs_GDkRRa7KfzAx2k3NppKshIB5MgatyBMxvYMh43Bje2r

@@ -37,19 +37,4 @@ dirs.forEach(dir => {
   }
 });
 
-// Initialize database in Vercel
-if (isVercel) {
-  try {
-    const dbPath = '/tmp/prisma.db';
-    if (!fs.existsSync(dbPath)) {
-      console.log('🗄️  Initializing database for Vercel...');
-      // Touch the database file
-      fs.writeFileSync(dbPath, '');
-      console.log('✅ Database file created');
-    }
-  } catch (error) {
-    console.warn(`⚠️  Database initialization: ${error.message}`);
-  }
-}
-
 console.log('✅ Post-install complete\n');
