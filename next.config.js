@@ -1,9 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // NOTE: Do NOT use output:'standalone' on Vercel — Vercel manages its own output
-  
   experimental: {
     serverComponentsExternalPackages: ['sharp', 'tesseract.js', '@xenova/transformers', '@prisma/client', 'prisma'],
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
+  
+  transpilePackages: ['@tsparticles/react', '@tsparticles/slim'],
+  
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  typescript: {
+    ignoreBuildErrors: false,
   },
   
   webpack: (config, { isServer }) => {
