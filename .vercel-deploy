@@ -1,0 +1,7 @@
+# Force Vercel Redeploy
+
+This file triggers a fresh deployment with all build fixes.
+
+**Latest Commit:** f309985
+**Date:** ${new Date().toISOString()}
+**Status:** All build issues resolved
