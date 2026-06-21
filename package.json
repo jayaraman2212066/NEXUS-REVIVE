@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/verify-build.js && prisma generate && next build",
+    "build": "node scripts/verify-build.js && prisma generate && prisma db push --accept-data-loss && next build",
     "start": "next start",
     "postinstall": "node scripts/postinstall.js && prisma generate",
     "lint": "next lint && prettier --check .",
