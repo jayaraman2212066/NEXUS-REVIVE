@@ -17,8 +17,9 @@ storage/tmp/*
 storage/output/*
 !storage/.gitkeep
 !storage/ai-models/.gitkeep
+!storage/ai-models/eng.traineddata
 
-# Database (regenerated)
+# Database (regenerated in /tmp)
 prisma/*.db
 prisma/*.db-journal
 prisma/prisma/*.db
@@ -27,24 +28,34 @@ prisma/prisma/*.db
 .env.local
 .env.development.local
 .env.test.local
+.env
 
 # IDE
 .vscode
 .idea
 *.swp
 
-# Docs
-*.md
-!README.md
+# Docs (keep README.md)
+DEPLOY_NOW.md
+DEPLOYMENT_STATUS.md
+DEPLOYMENT.md
+LOCAL_FIX.md
+MODULE_REVIEW.md
+POSTGRESQL_MIGRATION.md
+VERCEL_DEPLOYMENT_CHECKLIST.md
+VERIFICATION_COMPLETE.md
+QUICKSTART.md
+REVIEWS_AND_GITHUB_SETUP.md
+VERCEL_FIX.md
+test-conversion.md
 
 # Scripts
 setup.bat
 setup.ps1
 fix-dev.ps1
+verify-deployment.js
 
-# Images
-*.png
-!public/*.png
-nexus revive.png
+# Images (except public assets)
 n_logo_print.png
 n_logo_tabbrowse.png
+nexus revive.png

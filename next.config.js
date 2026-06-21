@@ -17,7 +17,10 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   
-  webpack: (config, { isServer }) => {
+  // Include Prisma files in function bundle
+  outputFileTracing: true,
+  
+  webpack: (config, { isServer, webpack }) => {
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
     
@@ -30,6 +33,18 @@ const nextConfig = {
         crypto: false,
       };
     }
+    
+    // Handle Prisma engine binaries
+    if (isServer) {
+      config.externals = [...(config.externals || []), '_http_common'];
+    }
+    
+    // Ignore pdf-parse test files to prevent build errors
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\/pdf-parse\/test\//,
+      })
+    );
     
     return config;
   },

@@ -3,6 +3,14 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build",
 
+  "env": {
+    "DATABASE_URL": "file:/tmp/prisma.db",
+    "STORAGE_PATH": "/tmp/storage",
+    "TEMP_PATH": "/tmp/storage/tmp",
+    "OUTPUT_PATH": "/tmp/storage/output",
+    "AI_MODELS_PATH": "/tmp/storage/ai-models"
+  },
+
   "functions": {
     "src/app/api/upload/route.ts": {
       "maxDuration": 60,

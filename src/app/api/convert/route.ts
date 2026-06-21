@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ensureDatabase } from "@/lib/db-init";
 import { processFile } from "@/processors";
 import { generateOutput, getFileExtension } from "@/generators";
 import { saveFile } from "@/lib/storage";
@@ -19,6 +20,8 @@ export async function POST(req: NextRequest) {
   let jobId: string | undefined;
 
   try {
+    // Ensure database is ready
+    await ensureDatabase();
     const body = await req.json();
     const { jobId: reqJobId, targetFormat } = body as { jobId: string; targetFormat: TargetFormat };
     jobId = reqJobId;
