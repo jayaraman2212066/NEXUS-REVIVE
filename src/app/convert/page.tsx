@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { DropZone } from "@/components/DropZone";
-import { FileCard } from "@/components/FileCard";
-import { FormatSelector } from "@/components/FormatSelector";
-import { PreviewPanel } from "@/components/PreviewPanel";
-import { PaywallModal } from "@/components/PaywallModal";
+import { DropZone, FileCard, FormatSelector, PreviewPanel, PaywallModal } from "@/components";
 import { useConversionStore } from "@/stores/conversion.store";
 
 export default function ConvertPage() {

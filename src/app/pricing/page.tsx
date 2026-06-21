@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Check, X, Zap, Key, LogOut, Crown } from "lucide-react";
-import { LicenseModal } from "@/components/LicenseModal";
+import { LicenseModal } from "@/components";
 
 interface SessionUser {
   id: string;

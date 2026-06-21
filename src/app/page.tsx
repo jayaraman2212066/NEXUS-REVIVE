@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ReviewSection } from "@/components/ReviewSection";
+import { ReviewSection } from "@/components";
 import {
   Zap, Upload, Search, Wrench, Bot, Eye, Package,
   ShieldCheck, BarChart3, Sparkles, ArrowRight,
