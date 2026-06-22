@@ -39,7 +39,10 @@ const nextConfig = {
       config.externals = [...(config.externals || []), '_http_common'];
     }
     
-    // Ignore test files from all packages
+    // Override pdf-parse to use lib directly and skip test code in index.js
+    config.resolve.alias['pdf-parse'] = require.resolve('pdf-parse/lib/pdf-parse.js');
+    
+    // Ignore test directories
     config.plugins.push(
       new webpack.IgnorePlugin({
         resourceRegExp: /\/test\//,
