@@ -28,13 +28,20 @@ try {
   execSync('npx prisma generate', { stdio: 'inherit' });
 
   // 3. Push database schema (Vercel deployment)
-  if (process.env.VERCEL === '1') {
+  if (process.env.VERCEL === '1' || process.env.DATABASE_URL?.includes('neon.tech')) {
     console.log('🔄 Pushing database schema to PostgreSQL...');
     try {
-      execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
+      execSync('npx prisma db push --skip-generate --accept-data-loss --force-reset', { stdio: 'inherit' });
       console.log('✅ Database schema pushed');
     } catch (dbError) {
-      console.warn('⚠️  Database push failed - continuing with build:', dbError.message);
+      console.error('⚠️  Database push failed:', dbError.message);
+      console.log('Attempting migration instead...');
+      try {
+        execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+        console.log('✅ Database migrated');
+      } catch (migError) {
+        console.warn('⚠️  Migration also failed - continuing with build');
+      }
     }
   }
 
