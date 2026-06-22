@@ -43,6 +43,7 @@ export async function saveFile(buffer: Buffer, filename: string, type: "temp" | 
     const basePath = type === "temp" ? TEMP_PATH : OUTPUT_PATH;
     const filePath = path.join(basePath, filename);
     await fs.writeFile(filePath, buffer);
+    console.log(`✅ Saved file: ${filename} (${buffer.length} bytes) to ${basePath}`);
     return filePath;
   } catch (error) {
     console.error("File save error:", error);
@@ -51,7 +52,18 @@ export async function saveFile(buffer: Buffer, filename: string, type: "temp" | 
 }
 
 export async function readFile(filePath: string): Promise<Buffer> {
-  return await fs.readFile(filePath);
+  try {
+    const exists = await fileExists(filePath);
+    if (!exists) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+    const buffer = await fs.readFile(filePath);
+    console.log(`✅ Read file: ${filePath} (${buffer.length} bytes)`);
+    return buffer;
+  } catch (error) {
+    console.error(`❌ Read file error: ${filePath}`, error);
+    throw new Error(`Failed to read file: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
 }
 
 export async function deleteFile(filePath: string): Promise<void> {

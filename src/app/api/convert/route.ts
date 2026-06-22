@@ -34,9 +34,20 @@ export async function POST(req: NextRequest) {
     const job = await prisma.conversionJob.findUnique({ where: { id: jobId } });
     if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
     
-    // Validate file exists BEFORE processing
-    if (!job.inputPath) {
-      return NextResponse.json({ error: "Input file path missing" }, { status: 500 });
+    // Get file content - try filesystem first, fallback to database
+    let fileBuffer: Buffer;
+    const filePathExists = job.inputPath && await import("@/lib/storage").then(m => m.fileExists(job.inputPath));
+    
+    if (filePathExists) {
+      // File exists in /tmp storage
+      const { readFile } = await import("@/lib/storage");
+      fileBuffer = await readFile(job.inputPath);
+    } else if (job.inputFileData) {
+      // Fallback: file stored in database
+      fileBuffer = Buffer.from(job.inputFileData);
+      console.log(`✅ Retrieved file from database: ${job.originalName} (${fileBuffer.length} bytes)`);
+    } else {
+      return NextResponse.json({ error: "Input file not available" }, { status: 500 });
     }
 
     // Auth context
@@ -71,7 +82,7 @@ export async function POST(req: NextRequest) {
     await updateJob(jobId, { status: "detecting", currentStage: "Detecting & validating format", progress: 10, targetFormat });
     await updateJob(jobId, { status: "repairing", currentStage: "Repairing & extracting content", progress: 25 });
 
-    const processed = await processFile(job.inputPath, job.originalFormat);
+    const processed = await processFile(fileBuffer, job.originalFormat, job.originalName);
     if (!processed?.text) throw new Error("No content could be extracted from this file");
 
     await updateJob(jobId, {

@@ -216,13 +216,23 @@ async function parseZip(buffer: Buffer): Promise<ProcessedContent> {
 }
 
 // ─── Main processor ───────────────────────────────────────────────────────────
-export async function processFile(filePath: string, format: string): Promise<ProcessedContent> {
-  if (!existsSync(filePath)) throw new Error(`File not found: ${filePath}`);
-
-  const buffer = readFileSync(filePath);
+export async function processFile(input: string | Buffer, format: string, filename?: string): Promise<ProcessedContent> {
+  let buffer: Buffer;
+  let ext: string;
+  
+  // Handle both file path (string) and buffer input
+  if (typeof input === 'string') {
+    // Legacy: file path
+    if (!existsSync(input)) throw new Error(`File not found: ${input}`);
+    buffer = readFileSync(input);
+    ext = path.extname(input).toLowerCase();
+  } else {
+    // New: buffer input
+    buffer = input;
+    ext = filename ? path.extname(filename).toLowerCase() : '';
+  }
+  
   if (!buffer || buffer.length === 0) throw new Error("File is empty");
-
-  const ext = path.extname(filePath).toLowerCase();
 
   // ── PDF ──────────────────────────────────────────────────────────────────────
   if (format === "PDF" || ext === ".pdf") {

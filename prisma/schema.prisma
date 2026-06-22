@@ -83,7 +83,9 @@ model ConversionJob {
   errorMessage       String?
   errorCode          String?
   inputPath          String
+  inputFileData      Bytes?                        // Store file content in DB
   outputPath         String?
+  outputFileData     Bytes?                        // Store output in DB
   previewText        String?
   previewHtml        String?
   fileHealthScore    Int?

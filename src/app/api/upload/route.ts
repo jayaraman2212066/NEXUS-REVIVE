@@ -84,6 +84,7 @@ export async function POST(req: NextRequest) {
         originalHash: hash,
         targetFormat: "txt",
         inputPath: filePath,
+        inputFileData: buffer,                    // Store in DB for Vercel
         fileHealthScore: healthScore,
         corruptionType,
         repairability,
