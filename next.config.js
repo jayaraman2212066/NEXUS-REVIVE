@@ -39,10 +39,16 @@ const nextConfig = {
       config.externals = [...(config.externals || []), '_http_common'];
     }
     
-    // Ignore pdf-parse test files to prevent build errors
+    // Ignore test files from all packages
     config.plugins.push(
       new webpack.IgnorePlugin({
-        resourceRegExp: /\/pdf-parse\/test\//,
+        resourceRegExp: /\/test\//,
+      })
+    );
+    
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.test\.(js|ts|tsx)$/,
       })
     );
     

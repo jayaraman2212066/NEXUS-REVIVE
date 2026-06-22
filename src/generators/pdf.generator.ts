@@ -10,10 +10,16 @@ const HEADING1 = "#0A1628";
 const HEADING2 = "#1A2E4A";
 const TABLE_HEADER_BG = "#E8F4FD";
 
-const LOGO_PATH = path.join(process.cwd(), "public", "n_logo_print.png");
 function getLogo(): Buffer | null {
-  try { return existsSync(LOGO_PATH) ? readFileSync(LOGO_PATH) : null; }
-  catch { return null; }
+  try {
+    const LOGO_PATH = path.join(process.cwd(), "public", "n_logo_print.png");
+    if (existsSync(LOGO_PATH)) {
+      return readFileSync(LOGO_PATH);
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 function detectHeading(line: string): { level: number; text: string } | null {
