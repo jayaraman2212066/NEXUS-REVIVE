@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ensureDatabase } from "@/lib/db-init";
+import { initializeAPI } from "@/lib/api-init";
 import { detectFormat, calculateHealthScore } from "@/algorithms/magic-bytes";
 import { hashFile } from "@/lib/hash";
 import { saveFile } from "@/lib/storage";
@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
   const res = NextResponse.next();
 
   try {
-    // Ensure database is ready
-    await ensureDatabase();
+    // Ensure API is fully initialized (DB + Storage)
+    await initializeAPI();
     const formData = await req.formData();
     const file = formData.get("file") as File;
     if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });

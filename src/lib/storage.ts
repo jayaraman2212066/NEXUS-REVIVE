@@ -17,10 +17,20 @@ const OUTPUT_PATH = isVercel
   ? "/tmp/storage/output" 
   : path.resolve(ROOT, process.env.OUTPUT_PATH || "storage/output");
 
+let directoriesInitialized = false;
+
 export async function ensureDirectories() {
-  await fs.mkdir(STORAGE_PATH, { recursive: true });
-  await fs.mkdir(TEMP_PATH, { recursive: true });
-  await fs.mkdir(OUTPUT_PATH, { recursive: true });
+  if (directoriesInitialized) return;
+  try {
+    await fs.mkdir(STORAGE_PATH, { recursive: true });
+    await fs.mkdir(TEMP_PATH, { recursive: true });
+    await fs.mkdir(OUTPUT_PATH, { recursive: true });
+    directoriesInitialized = true;
+    console.log("✅ Storage directories ready");
+  } catch (error) {
+    console.error("❌ Storage initialization failed:", error);
+    throw new Error("Storage system unavailable");
+  }
 }
 
 export async function saveFile(buffer: Buffer, filename: string, type: "temp" | "output" = "temp"): Promise<string> {

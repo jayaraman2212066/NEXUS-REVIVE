@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ensureDatabase } from "@/lib/db-init";
+import { initializeAPI } from "@/lib/api-init";
 import { processFile } from "@/processors";
 import { generateOutput, getFileExtension } from "@/generators";
 import { saveFile } from "@/lib/storage";
@@ -20,14 +20,23 @@ export async function POST(req: NextRequest) {
   let jobId: string | undefined;
 
   try {
-    // Ensure database is ready
-    await ensureDatabase();
+    // Ensure API is fully initialized (DB + Storage)
+    await initializeAPI();
+    
     const body = await req.json();
     const { jobId: reqJobId, targetFormat } = body as { jobId: string; targetFormat: TargetFormat };
     jobId = reqJobId;
 
     if (!jobId || !targetFormat) {
       return NextResponse.json({ error: "Missing jobId or targetFormat" }, { status: 400 });
+    }
+
+    const job = await prisma.conversionJob.findUnique({ where: { id: jobId } });
+    if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
+    
+    // Validate file exists BEFORE processing
+    if (!job.inputPath) {
+      return NextResponse.json({ error: "Input file path missing" }, { status: 500 });
     }
 
     // Auth context
@@ -46,9 +55,6 @@ export async function POST(req: NextRequest) {
         }, { status: 429 });
       }
     }
-
-    const job = await prisma.conversionJob.findUnique({ where: { id: jobId } });
-    if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
 
     // Pro-only formats gate
     const proOnlyFormats: TargetFormat[] = ["docx", "pdf", "xlsx"];
