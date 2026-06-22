@@ -1,61 +1,37 @@
-# Dependencies
-node_modules
-.pnp
-.pnp.js
+# Test files
+test/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
 
-# Testing
-coverage
-*.log
-
-# Build output (regenerated)
-.next
-out
-dist
-
-# Storage (never deploy user files)
-storage/tmp/*
-storage/output/*
-!storage/.gitkeep
-!storage/ai-models/.gitkeep
-!storage/ai-models/eng.traineddata
-
-# Database (regenerated in /tmp)
-prisma/*.db
-prisma/*.db-journal
-prisma/prisma/*.db
-
-# Environment
+# Development files
 .env.local
-.env.development.local
-.env.test.local
-.env
+.env.development
+.env*.local
 
-# IDE
-.vscode
-.idea
-*.swp
+# Documentation
+*.md
+!README.md
 
-# Docs (keep README.md)
-DEPLOY_NOW.md
-DEPLOYMENT_STATUS.md
-DEPLOYMENT.md
-LOCAL_FIX.md
-MODULE_REVIEW.md
-POSTGRESQL_MIGRATION.md
-VERCEL_DEPLOYMENT_CHECKLIST.md
-VERIFICATION_COMPLETE.md
-QUICKSTART.md
-REVIEWS_AND_GITHUB_SETUP.md
-VERCEL_FIX.md
-test-conversion.md
+# Editor
+.vscode/
+.idea/
 
-# Scripts
-setup.bat
-setup.ps1
-fix-dev.ps1
-verify-deployment.js
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Images (except public assets)
-n_logo_print.png
-n_logo_tabbrowse.png
-nexus revive.png
+# Local database
+prisma/prisma/
+*.db
+*.db-journal
+
+# Storage (uploaded files)
+storage/output/
+storage/tmp/
+
+# Keep .gitkeep files
+!**/.gitkeep

@@ -33,6 +33,9 @@
     }
   },
 
+  "outputDirectory": ".next",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
+
   "headers": [
     {
       "source": "/api/(.*)",
