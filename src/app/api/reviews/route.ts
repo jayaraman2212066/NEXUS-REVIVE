@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { hashString } from "@/lib/hash";
 import { getSessionUser } from "@/lib/session";
 
+export const runtime = 'nodejs';
 export const dynamic = "force-dynamic";
 
 function getIpHash(req: NextRequest): string {
