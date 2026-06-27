@@ -7,7 +7,16 @@ import { saveFile } from "@/lib/storage";
 import { getSessionUser } from "@/lib/session";
 import { getOrCreateAnonSession } from "@/lib/anon-session";
 
+export const runtime = 'nodejs';
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
+
+// Disable Next.js body parsing for FormData
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export async function POST(req: NextRequest) {
   const res = NextResponse.next();

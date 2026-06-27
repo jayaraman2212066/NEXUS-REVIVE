@@ -7,6 +7,14 @@ const nextConfig = {
     },
   },
   
+  // Critical for Vercel file uploads
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+    responseLimit: '50mb',
+  },
+  
   transpilePackages: ['@tsparticles/react', '@tsparticles/slim'],
   
   eslint: {

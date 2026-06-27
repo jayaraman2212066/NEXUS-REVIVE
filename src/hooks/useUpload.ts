@@ -5,6 +5,7 @@ export function useUpload() {
   const { setFile, setJobData, setUploading, setError } = useConversionStore();
 
   const upload = useCallback(async (file: File) => {
+    console.log("🔄 Starting upload:", file.name, file.size);
     setFile(file);
     setUploading(true);
     setError("");
@@ -13,13 +14,25 @@ export function useUpload() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      console.log("📤 Sending request to /api/upload...");
+      const res = await fetch("/api/upload", { 
+        method: "POST", 
+        body: formData,
+      });
+      
+      console.log("📥 Response status:", res.status);
       const data = await res.json();
+      console.log("📊 Response data:", data);
 
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+      if (!res.ok) {
+        console.error("❌ Upload failed:", data.error);
+        throw new Error(data.error || "Upload failed");
+      }
 
+      console.log("✅ Upload successful");
       setJobData(data);
     } catch (err: any) {
+      console.error("💥 Upload error:", err);
       setError(err.message || "Failed to upload file");
     } finally {
       setUploading(false);

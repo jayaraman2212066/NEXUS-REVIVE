@@ -8,6 +8,7 @@ import { TargetFormat } from "@/types/conversion.types";
 import { getSessionUser } from "@/lib/session";
 import { getOrCreateAnonSession, checkAndIncrementConversion } from "@/lib/anon-session";
 
+export const runtime = 'nodejs';
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
