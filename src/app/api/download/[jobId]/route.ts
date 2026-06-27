@@ -54,7 +54,7 @@ export async function GET(
     let fileBuffer: Buffer;
     const filePathExists = job.outputPath && await fileExists(job.outputPath);
     
-    if (filePathExists) {
+    if (filePathExists && job.outputPath) {
       fileBuffer = await readFile(job.outputPath);
       console.log(`✅ Downloaded from filesystem: ${job.outputPath}`);
     } else if (job.outputFileData) {
