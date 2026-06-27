@@ -85,6 +85,11 @@ export async function GET(
 
   } catch (error) {
     console.error("Download error:", error);
-    return NextResponse.json({ error: "Download failed" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Download failed";
+    return NextResponse.json({ 
+      error: "Download failed", 
+      details: errorMessage,
+      tip: "The file may have expired or been deleted. Try converting again."
+    }, { status: 500 });
   }
 }
