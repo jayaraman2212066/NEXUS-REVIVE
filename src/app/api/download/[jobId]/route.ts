@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { readFile } from "@/lib/storage";
+import { readFile, fileExists } from "@/lib/storage";
 import { getMimeType } from "@/generators";
 import { TargetFormat } from "@/types/conversion.types";
 import { getSessionUser } from "@/lib/session";
 import { getOrCreateAnonSession, checkAndIncrementDownload, FREE_DOWNLOAD_LIMIT } from "@/lib/anon-session";
 
+export const runtime = 'nodejs';
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export async function GET(
     const job = await prisma.conversionJob.findUnique({ where: { id: jobId } });
     if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
     if (job.status !== "completed") return NextResponse.json({ error: "Job not completed yet" }, { status: 400 });
-    if (!job.outputPath) return NextResponse.json({ error: "Output file not found" }, { status: 404 });
+    if (!job.outputPath && !job.outputFileData) return NextResponse.json({ error: "Output file not found" }, { status: 404 });
 
     const sessionUser = await getSessionUser(req);
     const isPro = sessionUser?.isPro ?? false;
@@ -49,7 +50,19 @@ export async function GET(
       }
     }
 
-    const fileBuffer = await readFile(job.outputPath);
+    // Try filesystem first, fallback to database
+    let fileBuffer: Buffer;
+    const filePathExists = job.outputPath && await fileExists(job.outputPath);
+    
+    if (filePathExists) {
+      fileBuffer = await readFile(job.outputPath);
+      console.log(`✅ Downloaded from filesystem: ${job.outputPath}`);
+    } else if (job.outputFileData) {
+      fileBuffer = Buffer.from(job.outputFileData);
+      console.log(`✅ Downloaded from database: ${job.originalName} (${fileBuffer.length} bytes)`);
+    } else {
+      throw new Error("Output file not available in filesystem or database");
+    }
 
     await prisma.conversionJob.update({
       where: { id: jobId },

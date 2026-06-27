@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
       currentStage: "Completed",
       progress: 100,
       outputPath,
+      outputFileData: outputBuffer,  // Store in DB for Vercel persistence
       processingMs,
       completedAt: new Date(),
       aiEnhanced: ["PNG", "JPEG", "TIFF", "BMP", "GIF"].includes(job.originalFormat),
