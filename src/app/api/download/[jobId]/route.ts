@@ -69,7 +69,8 @@ export async function GET(
       data: { downloadCount: { increment: 1 } },
     });
 
-    const extension = job.outputPath.split(".").pop() || "bin";
+    // Get file extension from outputPath or targetFormat
+    const extension = job.outputPath?.split(".").pop() || job.targetFormat || "bin";
     const baseName = job.originalName.replace(/\.[^.]+$/, "");
     const fileName = `${baseName}_recovered.${extension}`;
     const mimeType = getMimeType(job.targetFormat as TargetFormat);
